@@ -1,8 +1,9 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const restaurantController = require("../controllers/restaurant-controller");
 
-module.exports = router
+router.get("/restaurants", restaurantController.getRestaurants);
+
+router.use("/", (req, res) => res.redirect("/restaurants"));
+module.exports = router;
