@@ -9,7 +9,9 @@ const userController = {
   signUp: async (req, res, next) => {
     try {
       const { name, email, password, passwordCheck } = req.body
-      if (password !== passwordCheck) { throw new Error('Passwords do not match!') }
+      if (password !== passwordCheck) {
+        throw new Error('Passwords do not match!')
+      }
 
       const user = await User.findOne({
         where: { email }
@@ -26,6 +28,18 @@ const userController = {
     } catch (error) {
       next(error)
     }
+  },
+  signInPage: (req, res) => {
+    res.render('signin')
+  },
+  signIn: (req, res) => {
+    req.flash('success_messages', '成功登入!')
+    res.redirect('/restaurants')
+  },
+  logout: (req, res) => {
+    req.flash('success_messages', '成功登出!')
+    req.logout()
+    res.redirect('/signin')
   }
 }
 
