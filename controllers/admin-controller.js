@@ -13,8 +13,26 @@ const adminController = {
     }
   },
   getRestaurant: async (req, res, next) => {},
-  createRestaurant: async (req, res, next) => {},
-  postRestaurant: async (req, res, next) => {},
+  createRestaurant: (req, res) => {
+    return res.render("admin/create-restaurant");
+  },
+  postRestaurant: async (req, res, next) => {
+    try {
+      const { name, tel, address, openingHours, description } = req.body;
+      if (!name) throw new Error("Restaurant name is required!");
+      await Restaurant.create({
+        name,
+        tel,
+        address,
+        openingHours,
+        description,
+      });
+      req.flash("success_messages", "restaurant was successfully created");
+      res.redirect("/admin/restaurants");
+    } catch (error) {
+      next(error);
+    }
+  },
   editRestaurant: async (req, res, next) => {},
   putRestaurant: async (req, res, next) => {},
   deleteRestaurant: async (req, res, next) => {},
