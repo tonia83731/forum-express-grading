@@ -1,5 +1,5 @@
-const { Restaurant, User, Category } = require("../models");
-const { localFileHandler } = require("../helpers/file-helpers");
+const { Restaurant, User, Category } = require('../models')
+const { localFileHandler } = require('../helpers/file-helpers')
 
 const adminController = {
   getRestaurants: async (req, res, next) => {
@@ -8,37 +8,45 @@ const adminController = {
       const restaurants = await Restaurant.findAll({
         raw: true,
         nest: true,
-        include: [Category],
-      });
+        include: [Category]
+      })
       // console.log(restaurants);
-      res.render("admin/restaurants", { restaurants });
+      res.render('admin/restaurants', { restaurants })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   getRestaurant: async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const id = req.params.id
       const restaurant = await Restaurant.findByPk(id, {
         raw: true,
         nest: true,
-        include: [Category],
-      });
-      if (!restaurant) throw new Error("Restaurant didn't exist!");
-      res.render("admin/restaurant", { restaurant });
+        include: [Category]
+      })
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      res.render('admin/restaurant', { restaurant })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
-  createRestaurant: (req, res) => {
-    return res.render("admin/create-restaurant");
+  createRestaurant: async (req, res, next) => {
+    try {
+      const categories = await Category.findAll({
+        raw: true
+      })
+      return res.render('admin/create-restaurant', { categories })
+    } catch (error) {
+      next(error)
+    }
   },
   postRestaurant: async (req, res, next) => {
     try {
-      const { name, tel, address, openingHours, description } = req.body;
-      if (!name) throw new Error("Restaurant name is required!");
-      const { file } = req;
-      const filepath = await localFileHandler(file);
+      const { name, tel, address, openingHours, description, categoryId } =
+        req.body
+      if (!name) throw new Error('Restaurant name is required!')
+      const { file } = req
+      const filepath = await localFileHandler(file)
       await Restaurant.create({
         name,
         tel,
@@ -46,33 +54,38 @@ const adminController = {
         openingHours,
         description,
         image: filepath || null,
-      });
-      req.flash("success_messages", "restaurant was successfully created");
-      res.redirect("/admin/restaurants");
+        categoryId
+      })
+      req.flash('success_messages', 'restaurant was successfully created')
+      res.redirect('/admin/restaurants')
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   editRestaurant: async (req, res, next) => {
     try {
-      const id = req.params.id;
-      const restaurant = await Restaurant.findByPk(id, { raw: true });
-      if (!restaurant) throw new Error("Restaurant didn't exist!");
-      res.render("admin/edit-restaurant", { restaurant });
+      const id = req.params.id
+      const [restaurant, categories] = await Promise.all([
+        await Restaurant.findByPk(id, { raw: true }),
+        Category.findAll({ raw: true })
+      ])
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      res.render('admin/edit-restaurant', { restaurant, categories })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   putRestaurant: async (req, res, next) => {
     try {
-      const { name, tel, address, openingHours, description } = req.body;
-      const id = req.params.id;
-      if (!name) throw new Error("Restaurant name is required!");
-      const { file } = req;
+      const { name, tel, address, openingHours, description, categoryId } =
+        req.body
+      const id = req.params.id
+      if (!name) throw new Error('Restaurant name is required!')
+      const { file } = req
       const [restaurant, filepath] = await Promise.all([
         Restaurant.findByPk(id),
-        localFileHandler(file),
-      ]);
+        localFileHandler(file)
+      ])
       await restaurant.update({
         name,
         tel,
@@ -80,47 +93,48 @@ const adminController = {
         openingHours,
         description,
         image: filepath || restaurant.image,
-      });
-      req.flash("success_messages", "restaurant was successfully to update");
-      res.redirect("/admin/restaurants");
+        categoryId
+      })
+      req.flash('success_messages', 'restaurant was successfully to update')
+      res.redirect('/admin/restaurants')
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   deleteRestaurant: async (req, res, next) => {
     try {
-      const id = req.params.id;
-      const restaurant = await Restaurant.findByPk(id);
-      if (!restaurant) throw new Error("Restaurant didn't exist!");
-      await restaurant.destroy();
-      res.redirect("/admin/restaurants");
+      const id = req.params.id
+      const restaurant = await Restaurant.findByPk(id)
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      await restaurant.destroy()
+      res.redirect('/admin/restaurants')
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   getUser: async (req, res, next) => {
     try {
       const users = await User.findAll({
-        raw: true,
-      });
-      console.log(users);
-      res.render("admin/users", { users });
+        raw: true
+      })
+      console.log(users)
+      res.render('admin/users', { users })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   patchUser: async (req, res, next) => {
     try {
-      const id = req.params.id;
-      const user = await User.findByPk(id);
-      if (!user) throw new Error("User didn't exist!");
+      const id = req.params.id
+      const user = await User.findByPk(id)
+      if (!user) throw new Error("User didn't exist!")
       await user.update({
-        isAdmin: !user.isAdmin,
-      });
-      res.redirect("/admin/users");
+        isAdmin: !user.isAdmin
+      })
+      res.redirect('/admin/users')
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-};
-module.exports = adminController;
+  }
+}
+module.exports = adminController
