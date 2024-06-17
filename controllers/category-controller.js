@@ -19,7 +19,19 @@ const categoryController = {
       next(error);
     }
   },
-  postCategory: async (req, res, next) => {},
+  postCategory: async (req, res, next) => {
+    try {
+      const { name } = req.body;
+      if (!name) throw new Error("Category name is required!");
+      await Category.create({
+        name,
+      });
+      req.flash("success_messages", "category was successfully created");
+      res.redirect("/admin/categories");
+    } catch (error) {
+      next(error);
+    }
+  },
   putCategory: async (req, res, next) => {},
   deleteCategory: async (req, res, next) => {
     try {
