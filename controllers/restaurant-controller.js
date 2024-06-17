@@ -21,12 +21,14 @@ const restaurantController = {
   },
   getRestaurant: async (req, res, next) => {
     try {
-      const id = res.params.id;
+      const id = req.params.id;
       const restaurant = await Restaurant.findByPk(id, {
         raw: true,
         nest: true,
         include: Category,
       });
+      if (!restaurant) throw new Error("Restaurant didn't exist!");
+      res.render("restaurant", { restaurant });
     } catch (error) {
       next(error);
     }
