@@ -8,10 +8,10 @@ const categoryController = require("../../controllers/category-controller");
 
 router.get("/users", adminController.getUser);
 router.patch("/users/:id", adminController.patchUser);
+router.get("/categories/:id", categoryController.getCategories); // 新增這行
+router.put("/categories/:id", categoryController.putCategory); // 新增這行
 router.get("/categories", categoryController.getCategories);
 router.post("/categories", categoryController.postCategory);
-router.get("categories/:id", categoryController.getCategory);
-router.put("/categories/:id", categoryController.putCategory);
 router.delete("/categories/:id", categoryController.deleteCategory);
 router.get("/restaurants/create", adminController.createRestaurant);
 router.get("/restaurants/:id/edit", adminController.editRestaurant);
