@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("../config/passport");
 const restaurantController = require("../controllers/restaurant-controller");
 const userController = require("../controllers/user-controller");
+const commentController = require("../controllers/comment-controller");
 const { authenticated, authenticatedAdmin } = require("../middleware/auth");
 const { generalErrorHandler } = require("../middleware/error-handler");
 const admin = require("./modules/admin");
@@ -31,6 +32,7 @@ router.get(
   authenticated,
   restaurantController.getRestaurant
 );
+router.post("/comments", authenticated, commentController.postComment);
 // restaurants
 router.get("/restaurants", authenticated, restaurantController.getRestaurants);
 router.use("/", (req, res) => res.redirect("/restaurants"));
