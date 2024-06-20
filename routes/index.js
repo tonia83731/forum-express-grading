@@ -32,6 +32,11 @@ router.get(
   authenticated,
   restaurantController.getRestaurant
 );
+router.delete(
+  "/comments/:id",
+  authenticatedAdmin,
+  commentController.deleteComment
+);
 router.post("/comments", authenticated, commentController.postComment);
 // restaurants
 router.get("/restaurants", authenticated, restaurantController.getRestaurants);
