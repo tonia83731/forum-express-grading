@@ -14,3 +14,16 @@
     </div>
 </div>
 <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
+
+<ul class="list-group mt-4">
+    <li class="list-group-item active" aria-current="true">{{commentCounts}} 則評論, {{restCounts}} 評論餐廳</li>
+    <li class="list-group-item">
+        <div class="d-flex gap-3 align-items-center">
+            {{#each restaurants}}
+                <a href="/restaurants/{{this.id}}" class="">
+                    <img src="{{this.image}}" alt="{{this.name}}" class="" style="width: 60px; height: 60px;">
+                </a>
+            {{/each}}
+        </div>
+    </li>
+</ul>

@@ -1,35 +1,30 @@
-"use strict";
-const faker = require("faker");
+'use strict'
+const faker = require('faker')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const users = await queryInterface.sequelize.query("SELECT id FROM Users", {
-      type: queryInterface.sequelize.QueryTypes.SELECT,
-    });
+    const users = await queryInterface.sequelize.query('SELECT id FROM Users', {
+      type: queryInterface.sequelize.QueryTypes.SELECT
+    })
     const restaurants = await queryInterface.sequelize.query(
-      "SELECT id FROM Restaurants",
+      'SELECT id FROM Restaurants',
       {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
+        type: queryInterface.sequelize.QueryTypes.SELECT
       }
-    );
+    )
     await queryInterface.bulkInsert(
-      "Comments",
+      'Comments',
       Array.from({ length: 100 }, () => ({
         text: faker.lorem.words(15),
         user_id: users[Math.floor(Math.random() * users.length)].id,
         restaurant_id:
           restaurants[Math.floor(Math.random() * restaurants.length)].id,
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       }))
-    );
+    )
   },
 
   down: async (queryInterface, Sequelize) => {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  },
-};
+    await queryInterface.bulkDelete('Comments', {})
+  }
+}
