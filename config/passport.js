@@ -46,6 +46,14 @@ passport.deserializeUser(async (id, cb) => {
       {
         model: Restaurant,
         as: 'FavoritedRestaurants'
+      },
+      {
+        model: User,
+        as: 'Followers'
+      },
+      {
+        model: User,
+        as: 'Followings'
       }
     ]
   })
