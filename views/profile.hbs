@@ -11,11 +11,95 @@
     <div class="col-md-8">
         <h1>{{user.name}}</h1>
         <p>{{user.email}}</p>
+
+        <ul class="">
+            <li class="">{{user.Comments.length}} 已評論餐廳</li>
+            <li class="">{{user.FavoritedRestaurants.length}} 收藏的餐廳</li>
+            <li class="">{{user.Followings.length}} followings (追蹤者)</li>
+            <li class="">{{user.Followers.length}} followers (追隨者)</li>
+        </ul>
+        <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
     </div>
 </div>
-<a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
-
-<ul class="list-group mt-4">
+<div class="row">
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{user.Followings.length}} followings
+            </div>
+            <div class="flex my-2 gap-2 px-2">
+                {{#each user.Followings}}
+                    {{#if this.image}}
+                    <img class="img-responsive center-block" src="{{this.image}}"
+                        style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+                    {{else}}
+                    <img class="img-responsive center-block opacity-25"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdO2DCDcfM7yDAtEo797CkSw_njibgz-lOgw&s"
+                        style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=0.25;">
+                    {{/if}}
+                {{/each}}
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{user.Followers.length}} followings
+            </div>
+            <div class="flex my-2 gap-2 px-2">
+                {{#each user.Followers}}
+                {{#if this.image}}
+                <img class="img-responsive center-block" src="{{this.image}}"
+                    style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+                {{else}}
+                <img class="img-responsive center-block opacity-25"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdO2DCDcfM7yDAtEo797CkSw_njibgz-lOgw&s"
+                    style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=0.25;">
+                {{/if}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{user.Comments.length}} 已評論餐廳
+            </div>
+            <div class="flex my-2 gap-2 px-2">
+                {{#each user.Comments}}
+                <a href="/restaurants/{{this.id}}" class="">
+                    {{#if this.image}}
+                    <img class="img-responsive center-block" src="{{this.image}}" style="width: 80px; transition: opacity 0.5s; opacity:0;"
+                        onload="this.style.opacity=1;">
+                    {{else}}
+                    <img class="img-responsive center-block opacity-25"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdO2DCDcfM7yDAtEo797CkSw_njibgz-lOgw&s"
+                        style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=0.25;">
+                    {{/if}}
+                </a>
+                {{/each}}
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{user.FavoritedRestaurants.length}} 收藏的餐廳
+            </div>
+            <div class="flex my-2 gap-2 px-2">
+                {{#each user.FavoritedRestaurants}}
+                <a href="/restaurants/{{this.id}}" class="">
+                    {{#if this.image}}
+                    <img class="img-responsive center-block" src="{{this.image}}" style="width: 80px; transition: opacity 0.5s; opacity:0;"
+                        onload="this.style.opacity=1;">
+                    {{else}}
+                    <img class="img-responsive center-block opacity-25"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdO2DCDcfM7yDAtEo797CkSw_njibgz-lOgw&s"
+                        style="width: 80px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=0.25;">
+                    {{/if}}
+                    {{/each}}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- <ul class="list-group mt-4">
     <li class="list-group-item active" aria-current="true">{{commentCounts}} 則評論, {{restCounts}} 評論餐廳</li>
     <li class="list-group-item">
         <div class="d-flex gap-3 align-items-center">
@@ -26,4 +110,4 @@
             {{/each}}
         </div>
     </li>
-</ul>
+</ul> --}}
