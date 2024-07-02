@@ -1,20 +1,23 @@
 const { Restaurant, User, Category } = require('../../models')
 const { imgurFileHandler } = require('../../helpers/file-helpers')
+const adminService = require('../../services/admin-services')
 
 const adminController = {
   getRestaurants: async (req, res, next) => {
+    adminService.getRestaurants(req, res, (err, data) =>
+      err ? next(err) : res.render('admin/restaurants', data)
+    )
     // return res.render("admin/restaurants");
-    try {
-      const restaurants = await Restaurant.findAll({
-        raw: true,
-        nest: true,
-        include: [Category]
-      })
-      // console.log(restaurants);
-      res.render('admin/restaurants', { restaurants })
-    } catch (error) {
-      next(error)
-    }
+    // try {
+    //   const restaurants = await Restaurant.findAll({
+    //     raw: true,
+    //     nest: true,
+    //     include: [Category]
+    //   })
+    //   res.render('admin/restaurants', { restaurants })
+    // } catch (error) {
+    //   next(error)
+    // }
   },
   getRestaurant: async (req, res, next) => {
     try {
