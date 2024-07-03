@@ -1,12 +1,12 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const admin = require("./modules/admin");
+const restController = require("../../controllers/apis/restaurant-controller");
+const { apiErrorHandler } = require("../../middleware/error-handler");
 
-const restController = require('../../controllers/apis/restaurant-controller')
-const adminController = require('../../controllers/apis/admin-controller')
-// const adminController = require("../../controllers/pages/admin-controller");
+router.use("/admin", admin);
 
-router.get('/admin/restaurants', adminController.getRestaurants)
+router.get("/restaurants", restController.getRestaurants);
+router.use("/", apiErrorHandler);
 
-router.get('/restaurants', restController.getRestaurants)
-
-module.exports = router
+module.exports = router;
