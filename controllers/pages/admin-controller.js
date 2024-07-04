@@ -1,12 +1,12 @@
-const { Restaurant, User, Category } = require("../../models");
-const { imgurFileHandler } = require("../../helpers/file-helpers");
-const adminService = require("../../services/admin-services");
+const { Restaurant, User, Category } = require('../../models')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
+const adminService = require('../../services/admin-services')
 
 const adminController = {
   getRestaurants: async (req, res, next) => {
     adminService.getRestaurants(req, (err, data) =>
-      err ? next(err) : res.render("admin/restaurants", data)
-    );
+      err ? next(err) : res.render('admin/restaurants', data)
+    )
     // return res.render("admin/restaurants");
     // try {
     //   const restaurants = await Restaurant.findAll({
@@ -21,74 +21,80 @@ const adminController = {
   },
   getRestaurant: async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const id = req.params.id
       const restaurant = await Restaurant.findByPk(id, {
         raw: true,
         nest: true,
-        include: [Category],
-      });
-      if (!restaurant) throw new Error("Restaurant didn't exist!");
-      res.render("admin/restaurant", { restaurant });
+        include: [Category]
+      })
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      res.render('admin/restaurant', { restaurant })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   createRestaurant: async (req, res, next) => {
     try {
       const categories = await Category.findAll({
-        raw: true,
-      });
-      return res.render("admin/create-restaurant", { categories });
+        raw: true
+      })
+      return res.render('admin/create-restaurant', { categories })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   postRestaurant: async (req, res, next) => {
-    try {
-      const { name, tel, address, openingHours, description, categoryId } =
-        req.body;
-      if (!name) throw new Error("Restaurant name is required!");
-      const { file } = req;
-      const filepath = await imgurFileHandler(file);
-      await Restaurant.create({
-        name,
-        tel,
-        address,
-        openingHours,
-        description,
-        image: filepath || null,
-        categoryId,
-      });
-      req.flash("success_messages", "restaurant was successfully created");
-      res.redirect("/admin/restaurants");
-    } catch (error) {
-      next(error);
-    }
+    adminService.postRestaurant(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', 'restaurant was successfully created')
+      req.session.createdData = data
+      return res.redirect('/admin/restaurants')
+    })
+    // try {
+    //   const { name, tel, address, openingHours, description, categoryId } =
+    //     req.body
+    //   if (!name) throw new Error('Restaurant name is required!')
+    //   const { file } = req
+    //   const filepath = await imgurFileHandler(file)
+    //   await Restaurant.create({
+    //     name,
+    //     tel,
+    //     address,
+    //     openingHours,
+    //     description,
+    //     image: filepath || null,
+    //     categoryId
+    //   })
+    //   req.flash('success_messages', 'restaurant was successfully created')
+    //   res.redirect('/admin/restaurants')
+    // } catch (error) {
+    //   next(error)
+    // }
   },
   editRestaurant: async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const id = req.params.id
       const [restaurant, categories] = await Promise.all([
         await Restaurant.findByPk(id, { raw: true }),
-        Category.findAll({ raw: true }),
-      ]);
-      if (!restaurant) throw new Error("Restaurant didn't exist!");
-      res.render("admin/edit-restaurant", { restaurant, categories });
+        Category.findAll({ raw: true })
+      ])
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      res.render('admin/edit-restaurant', { restaurant, categories })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   putRestaurant: async (req, res, next) => {
     try {
       const { name, tel, address, openingHours, description, categoryId } =
-        req.body;
-      const id = req.params.id;
-      if (!name) throw new Error("Restaurant name is required!");
-      const { file } = req;
+        req.body
+      const id = req.params.id
+      if (!name) throw new Error('Restaurant name is required!')
+      const { file } = req
       const [restaurant, filepath] = await Promise.all([
         Restaurant.findByPk(id),
-        imgurFileHandler(file),
-      ]);
+        imgurFileHandler(file)
+      ])
       await restaurant.update({
         name,
         tel,
@@ -96,12 +102,12 @@ const adminController = {
         openingHours,
         description,
         image: filepath || restaurant.image,
-        categoryId,
-      });
-      req.flash("success_messages", "restaurant was successfully to update");
-      res.redirect("/admin/restaurants");
+        categoryId
+      })
+      req.flash('success_messages', 'restaurant was successfully to update')
+      res.redirect('/admin/restaurants')
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   deleteRestaurant: async (req, res, next) => {
@@ -115,34 +121,34 @@ const adminController = {
     //   next(error)
     // }
     adminService.deleteRestaurant(req, (err, data) => {
-      if (err) return next(err);
-      req.session.deletedData = data;
-      return res.redirect("/admin/restaurants");
-    });
+      if (err) return next(err)
+      req.session.deletedData = data
+      return res.redirect('/admin/restaurants')
+    })
   },
   getUser: async (req, res, next) => {
     try {
       const users = await User.findAll({
-        raw: true,
-      });
-      console.log(users);
-      res.render("admin/users", { users });
+        raw: true
+      })
+      console.log(users)
+      res.render('admin/users', { users })
     } catch (error) {
-      next(error);
+      next(error)
     }
   },
   patchUser: async (req, res, next) => {
     try {
-      const id = req.params.id;
-      const user = await User.findByPk(id);
-      if (!user) throw new Error("User didn't exist!");
+      const id = req.params.id
+      const user = await User.findByPk(id)
+      if (!user) throw new Error("User didn't exist!")
       await user.update({
-        isAdmin: !user.isAdmin,
-      });
-      res.redirect("/admin/users");
+        isAdmin: !user.isAdmin
+      })
+      res.redirect('/admin/users')
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-};
-module.exports = adminController;
+  }
+}
+module.exports = adminController
