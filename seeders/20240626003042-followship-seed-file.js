@@ -8,32 +8,32 @@ module.exports = {
 
     await queryInterface.bulkInsert('Followships', [
       {
-        follower_id: 11,
-        following_id: users[0].id,
+        follower_id: users[Math.floor(Math.random() * users.length)].id,
+        following_id: users[Math.floor(Math.random() * users.length)].id,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        follower_id: 11,
-        following_id: users[1].id,
+        follower_id: users[Math.floor(Math.random() * users.length)].id,
+        following_id: users[Math.floor(Math.random() * users.length)].id,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        follower_id: 11,
-        following_id: users[2].id,
+        follower_id: users[Math.floor(Math.random() * users.length)].id,
+        following_id: users[Math.floor(Math.random() * users.length)].id,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        follower_id: users[users.length - 1].id,
-        following_id: 11,
+        follower_id: users[Math.floor(Math.random() * users.length)].id,
+        following_id: users[Math.floor(Math.random() * users.length)].id,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        follower_id: users[users.length - 2].id,
-        following_id: 11,
+        follower_id: users[Math.floor(Math.random() * users.length)].id,
+        following_id: users[Math.floor(Math.random() * users.length)].id,
         created_at: new Date(),
         updated_at: new Date()
       }
