@@ -5,32 +5,40 @@ const {
   // localFileHandler,
   imgurFileHandler
 } = require('../../helpers/file-helpers')
+
+const userService = require('../../services/user-services')
 const userController = {
   signUpPage: (req, res) => {
     res.render('signup')
   },
   signUp: async (req, res, next) => {
-    try {
-      const { name, email, password, passwordCheck } = req.body
-      if (password !== passwordCheck) {
-        throw new Error('Passwords do not match!')
-      }
-
-      const user = await User.findOne({
-        where: { email }
-      })
-      if (user) throw new Error('Email already exists!')
-      const hash = await bcrypt.hash(password, 10)
-      await User.create({
-        name,
-        email,
-        password: hash
-      })
+    userService.signUp(req, (err, data) => {
+      if (err) return next(err)
       req.flash('success_messages', '成功註冊帳號！')
-      res.redirect('/signin')
-    } catch (error) {
-      next(error)
-    }
+      req.session.createData = data
+      return res.redirect('/signin')
+    })
+    // try {
+    //   const { name, email, password, passwordCheck } = req.body;
+    //   if (password !== passwordCheck) {
+    //     throw new Error("Passwords do not match!");
+    //   }
+
+    //   const user = await User.findOne({
+    //     where: { email },
+    //   });
+    //   if (user) throw new Error("Email already exists!");
+    //   const hash = await bcrypt.hash(password, 10);
+    //   await User.create({
+    //     name,
+    //     email,
+    //     password: hash,
+    //   });
+    //   req.flash("success_messages", "成功註冊帳號！");
+    //   res.redirect("/signin");
+    // } catch (error) {
+    //   next(error);
+    // }
   },
   signInPage: (req, res) => {
     res.render('signin')
